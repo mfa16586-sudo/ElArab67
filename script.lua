@@ -1,4 +1,4 @@
--- ElArab67 VIP & Faleh Aim (Combined & Fixed Version)
+-- ElArab67 VIP & Faleh Aim (Full & Uncompressed Version)
 local WEBHOOK_URL = "https://discord.com/api/webhooks/1255555712744882100/o2kQSfZ9rLs2geK3PDBqcbyeRpOBLfXF9Tdr8lFP-8ixCjs6qP6cbppxFv_zLHGD_U8j"
 
 local Players = game:GetService("Players")
@@ -8,12 +8,21 @@ local playerGui = player:WaitForChild("PlayerGui")
 local CoreGui = game:GetService("CoreGui")
 
 local function cleanup(parent)
-    if parent and parent:FindFirstChild("ElArab67UI") then parent.ElArab67UI:Destroy() end
-    if parent and parent:FindFirstChild("ElArab67KeyUI") then parent.ElArab67KeyUI:Destroy() end
-    if parent and parent:FindFirstChild("FalehMobileUI") then parent.FalehMobileUI:Destroy() end
+    if parent and parent:FindFirstChild("ElArab67UI") then
+        parent.ElArab67UI:Destroy()
+    end
+    if parent and parent:FindFirstChild("ElArab67KeyUI") then
+        parent.ElArab67KeyUI:Destroy()
+    end
+    if parent and parent:FindFirstChild("FalehMobileUI") then
+        parent.FalehMobileUI:Destroy()
+    end
 end
+
 cleanup(playerGui)
-pcall(function() cleanup(CoreGui) end)
+pcall(function()
+    cleanup(CoreGui)
+end)
 
 local function generateSecretKey()
     local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -34,17 +43,33 @@ local function sendWebhookNotification(keyGenerated)
             request({
                 Url = WEBHOOK_URL,
                 Method = "POST",
-                Headers = {["Content-Type"] = "application/json"},
+                Headers = {
+                    ["Content-Type"] = "application/json"
+                },
                 Body = HttpService:JSONEncode({
-                    ["embeds"] = {{
-                        ["title"] = "🔑 طلب تفعيل سكربت جديد!",
-                        ["color"] = 16766720,
-                        ["fields"] = {
-                            {["name"] = "اسم اللاعب", ["value"] = player.Name .. " (" .. player.DisplayName .. ")", ["inline"] = true},
-                            {["name"] = "الكود الخاص به", ["value"] = "`" .. keyGenerated .. "`", ["inline"] = true},
-                            {["name"] = "المدة", ["value"] = "ساعة واحدة من وقت التفعيل", ["inline"] = false}
+                    ["embeds"] = {
+                        {
+                            ["title"] = "🔑 طلب تفعيل سكربت جديد!",
+                            ["color"] = 16766720,
+                            ["fields"] = {
+                                {
+                                    ["name"] = "اسم اللاعب",
+                                    ["value"] = player.Name .. " (" .. player.DisplayName .. ")",
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "الكود الخاص به",
+                                    ["value"] = "`" .. keyGenerated .. "`",
+                                    ["inline"] = true
+                                },
+                                {
+                                    ["name"] = "المدة",
+                                    ["value"] = "ساعة واحدة من وقت التفعيل",
+                                    ["inline"] = false
+                                }
+                            }
                         }
-                    }}
+                    }
                 })
             })
         end)
@@ -57,8 +82,12 @@ local KeyScreenGui = Instance.new("ScreenGui")
 KeyScreenGui.Name = "ElArab67KeyUI"
 KeyScreenGui.ResetOnSpawn = false
 
-local successKey = pcall(function() KeyScreenGui.Parent = CoreGui end)
-if not successKey or not KeyScreenGui.Parent then KeyScreenGui.Parent = playerGui end
+local successKey = pcall(function()
+    KeyScreenGui.Parent = CoreGui
+end)
+if not successKey or not KeyScreenGui.Parent then
+    KeyScreenGui.Parent = playerGui
+end
 
 local KeyFrame = Instance.new("Frame")
 KeyFrame.Size = UDim2.new(0, 320, 0, 180)
@@ -120,7 +149,6 @@ SubmitCorner.Parent = SubmitBtn
 local function loadMainScript()
     KeyScreenGui:Destroy()
 
-    -- تشغيل سكربت القائمة + الأيم بوت والـ ESP الخاص بالجوال
     local RunService = game:GetService("RunService")
     local Workspace = game:GetService("Workspace")
     local Camera = Workspace.CurrentCamera
@@ -142,12 +170,17 @@ local function loadMainScript()
     local hideLegsEnabled = false
     local originalDisplayName = player.DisplayName
 
-    -- زر الأيم بوت الخاص بالجوال
+    -- واجهة وزر الأيم بوت الخاص بالجوال
     local FalehGui = Instance.new("ScreenGui")
     FalehGui.Name = "FalehMobileUI"
     FalehGui.ResetOnSpawn = false
-    pcall(function() FalehGui.Parent = CoreGui end)
-    if not FalehGui.Parent then FalehGui.Parent = playerGui end
+    
+    pcall(function()
+        FalehGui.Parent = CoreGui
+    end)
+    if not FalehGui.Parent then
+        FalehGui.Parent = playerGui
+    end
 
     local ToggleBtn = Instance.new("TextButton")
     ToggleBtn.Size = UDim2.new(0, 130, 0, 45)
@@ -169,7 +202,7 @@ local function loadMainScript()
     local BtnStroke = Instance.new("UIStroke")
     BtnStroke.Color = Color3.fromRGB(255, 215, 0)
     BtnStroke.Thickness = 1.5
-    ToggleBtn.Parent = FalehGui
+    BtnStroke.Parent = ToggleBtn
 
     local function toggleAimbot()
         aimbot = not aimbot
@@ -184,12 +217,17 @@ local function loadMainScript()
 
     ToggleBtn.MouseButton1Click:Connect(toggleAimbot)
 
+    -- واجهة سكربت العراب الرئيسية
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "ElArab67UI"
     ScreenGui.ResetOnSpawn = false
 
-    local success = pcall(function() ScreenGui.Parent = CoreGui end)
-    if not success or not ScreenGui.Parent then ScreenGui.Parent = playerGui end
+    local success = pcall(function()
+        ScreenGui.Parent = CoreGui
+    end)
+    if not success or not ScreenGui.Parent then
+        ScreenGui.Parent = playerGui
+    end
 
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
@@ -358,13 +396,25 @@ local function loadMainScript()
 
         box.FocusLost:Connect(function()
             local num = tonumber(box.Text)
-            if num then onFocusLost(num) else box.Text = tostring(defaultVal) end
+            if num then
+                onFocusLost(num)
+            else
+                box.Text = tostring(defaultVal)
+            end
         end)
     end
 
-    createInputRow("قوة السرعة:", SPEED_LEVEL, 45, function(val) SPEED_LEVEL = val updateStats() end)
-    createInputRow("قوة النط:", JUMP_HEIGHT, 80, function(val) JUMP_HEIGHT = val updateStats() end)
-    createInputRow("سرعة الطيران:", FLY_SPEED_LEVEL, 115, function(val) FLY_SPEED_LEVEL = val end)
+    createInputRow("قوة السرعة:", SPEED_LEVEL, 45, function(val)
+        SPEED_LEVEL = val
+        updateStats()
+    end)
+    createInputRow("قوة النط:", JUMP_HEIGHT, 80, function(val)
+        JUMP_HEIGHT = val
+        updateStats()
+    end)
+    createInputRow("سرعة الطيران:", FLY_SPEED_LEVEL, 115, function(val)
+        FLY_SPEED_LEVEL = val
+    end)
 
     local speedBtn = Instance.new("TextButton")
     speedBtn.Size = UDim2.new(1, -8, 0, 32)
@@ -384,9 +434,15 @@ local function loadMainScript()
     speedBtn.MouseButton1Click:Connect(function()
         speedEnabled = not speedEnabled
         updateStats()
-        speedBtn.Text = speedEnabled and "السرعة: شغالة" or "السرعة: طافية"
-        speedBtn.BackgroundColor3 = speedEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
-        speedBtn.BackgroundTransparency = speedEnabled and 0.3 or 0.4
+        if speedEnabled then
+            speedBtn.Text = "السرعة: شغالة"
+            speedBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+            speedBtn.BackgroundTransparency = 0.3
+        else
+            speedBtn.Text = "السرعة: طافية"
+            speedBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            speedBtn.BackgroundTransparency = 0.4
+        end
     end)
 
     local jumpBtn = Instance.new("TextButton")
@@ -407,9 +463,15 @@ local function loadMainScript()
     jumpBtn.MouseButton1Click:Connect(function()
         jumpEnabled = not jumpEnabled
         updateStats()
-        jumpBtn.Text = jumpEnabled and "النط: شغال" or "النط: طافي"
-        jumpBtn.BackgroundColor3 = jumpEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
-        jumpBtn.BackgroundTransparency = jumpEnabled and 0.3 or 0.4
+        if jumpEnabled then
+            jumpBtn.Text = "النط: شغال"
+            jumpBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+            jumpBtn.BackgroundTransparency = 0.3
+        else
+            jumpBtn.Text = "النط: طافي"
+            jumpBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            jumpBtn.BackgroundTransparency = 0.4
+        end
     end)
 
     local bodyVisualTitle = Instance.new("TextLabel")
@@ -428,7 +490,9 @@ local function loadMainScript()
             if not char then return end
 
             local head = char:FindFirstChild("Head")
-            if head then head.LocalTransparencyModifier = hideHeadEnabled and 1 or 0 end
+            if head then
+                head.LocalTransparencyModifier = hideHeadEnabled and 1 or 0
+            end
 
             for _, acc in pairs(char:GetChildren()) do
                 if acc:IsA("Accessory") and acc:FindFirstChild("Handle") then
@@ -442,7 +506,9 @@ local function loadMainScript()
             local legNames = {"Left Leg", "Right Leg", "LeftUpperLeg", "LeftLowerLeg", "LeftFoot", "RightUpperLeg", "RightLowerLeg", "RightFoot"}
             for _, partName in pairs(legNames) do
                 local legPart = char:FindFirstChild(partName)
-                if legPart and legPart:IsA("BasePart") then legPart.LocalTransparencyModifier = hideLegsEnabled and 1 or 0 end
+                if legPart and legPart:IsA("BasePart") then
+                    legPart.LocalTransparencyModifier = hideLegsEnabled and 1 or 0
+                end
             end
         end)
     end
@@ -465,9 +531,15 @@ local function loadMainScript()
     headBtn.MouseButton1Click:Connect(function()
         hideHeadEnabled = not hideHeadEnabled
         updateBodyVisuals()
-        headBtn.Text = hideHeadEnabled and "رأس مخفي: شغال" or "رأس مخفي: طافي"
-        headBtn.BackgroundColor3 = hideHeadEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
-        headBtn.BackgroundTransparency = hideHeadEnabled and 0.3 or 0.4
+        if hideHeadEnabled then
+            headBtn.Text = "رأس مخفي: شغال"
+            headBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+            headBtn.BackgroundTransparency = 0.3
+        else
+            headBtn.Text = "رأس مخفي: طافي"
+            headBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            headBtn.BackgroundTransparency = 0.4
+        end
     end)
 
     local legBtn = Instance.new("TextButton")
@@ -488,12 +560,18 @@ local function loadMainScript()
     legBtn.MouseButton1Click:Connect(function()
         hideLegsEnabled = not hideLegsEnabled
         updateBodyVisuals()
-        legBtn.Text = hideLegsEnabled and "رجل مخفية: شغالة" or "رجل مخفية: طافية"
-        legBtn.BackgroundColor3 = hideLegsEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
-        legBtn.BackgroundTransparency = hideLegsEnabled and 0.3 or 0.4
+        if hideLegsEnabled then
+            legBtn.Text = "رجل مخفية: شغالة"
+            legBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+            legBtn.BackgroundTransparency = 0.3
+        else
+            legBtn.Text = "رجل مخفية: طافية"
+            legBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            legBtn.BackgroundTransparency = 0.4
+        end
     end)
 
-    -- إعداد ESP واللوت للخصوم
+    -- إعداد كشف الخصوم (ESP)
     for _, p in pairs(Players:GetPlayers()) do
         if p ~= player then
             p.CharacterAdded:Connect(function(char)
@@ -506,7 +584,7 @@ local function loadMainScript()
         end
     end
 
-    -- محرك الأيم بوت المستمر
+    -- تشغيل حلقة الأيم بوت والحركة المستمرة
     RunService.RenderStepped:Connect(function()
         if aimbot then
             local target = nil
@@ -555,10 +633,14 @@ local function loadMainScript()
         end
     end)
 
-    -- مؤقت الساعة (بعد 3600 ثانية = ساعة كاملة، يغلق السكربت ويختفي تلقائياً)
+    -- مؤقت الساعة (بعد 3600 ثانية يتم إغلاق السكربت بالكامل)
     task.delay(3600, function()
-        if ScreenGui then ScreenGui:Destroy() end
-        if FalehGui then FalehGui:Destroy() end
+        if ScreenGui then
+            ScreenGui:Destroy()
+        end
+        if FalehGui then
+            FalehGui:Destroy()
+        end
     end)
 end
 
