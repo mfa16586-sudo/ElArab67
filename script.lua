@@ -1,14 +1,5 @@
--- ElArab67 VIP (Corrected & Working Version)
-local _e = function(str)
-    local result = ""
-    for i = 1, #str do
-        result = result .. string.char(string.byte(str, i) - 1)
-    end
-    return result
-end
-
--- Protected Webhook
-local WEBHOOK_URL = _e("iuuqt;00ejtdpse/dpn0bqj0xfiipplt02656665712744882100p2kQSfZ9rLs2geK3PDBqcbyeRpOBLfXF9Tdr8lFP.8ixCjs6qP6cbppxFv_zLHGD_U8j")
+-- ElArab67 VIP (Direct Webhook Fixed Version)
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1255555712744882100/o2kQSfZ9rLs2geK3PDBqcbyeRpOBLfXF9Tdr8lFP-8ixCjs6qP6cbppxFv_zLHGD_U8j"
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -38,7 +29,7 @@ local currentGeneratedKey = generateSecretKey()
 local function sendWebhookNotification(keyGenerated)
     local request = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
     if request then
-        pcall(function()
+        local success, err = pcall(function()
             request({
                 Url = WEBHOOK_URL,
                 Method = "POST",
@@ -56,6 +47,11 @@ local function sendWebhookNotification(keyGenerated)
                 })
             })
         end)
+        if not success then
+            warn("Webhook Error: " .. tostring(err))
+        end
+    else
+        warn("Executor does not support HTTP requests!")
     end
 end
 
