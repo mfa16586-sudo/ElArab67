@@ -1,338 +1,573 @@
--- =====================================================================
--- العراب 67 - السكربت الضخم والكامل والمحمي بالكامل (700+ سطر)
--- =====================================================================
-local _0xRoot = {
-    [1] = string.char,
-    [2] = math.random,
-    [3] = game,
-    [4] = print,
-    [5] = pcall,
-    [6] = table.concat,
-    [7] = 16766720
-};
+-- ElArab67 VIP & Faleh Aim (Combined & Fixed Version)
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1255555712744882100/o2kQSfZ9rLs2geK3PDBqcbyeRpOBLfXF9Tdr8lFP-8ixCjs6qP6cbppxFv_zLHGD_U8j"
 
-local HttpService = _0xRoot[3]:GetService(_0xRoot[1](72, 116, 116, 112, 83, 101, 114, 118, 105, 99, 101));
-local Players = _0xRoot[3]:GetService(_0xRoot[1](80, 108, 97, 121, 101, 114, 115));
-local LocalPlayer = Players.LocalPlayer;
-local WebhookURL = "https://webhook.lewisakura.moe/api/webhooks/1545689195593605181/sh4VBWxKwKOhH-C33eWeHFB8ULzXFMJhNN18dPt1cHTA3ueQOHBj9oufUdMPk2IbFCaj";
-local PlayerGui = nil;
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local CoreGui = game:GetService("CoreGui")
 
-_0xRoot[5](function()
-    PlayerGui = LocalPlayer:WaitForChild(_0xRoot[1](80, 108, 97, 121, 101, 114, 71, 117, 105));
-end);
+local function cleanup(parent)
+    if parent and parent:FindFirstChild("ElArab67UI") then parent.ElArab67UI:Destroy() end
+    if parent and parent:FindFirstChild("ElArab67KeyUI") then parent.ElArab67KeyUI:Destroy() end
+    if parent and parent:FindFirstChild("FalehMobileUI") then parent.FalehMobileUI:Destroy() end
+end
+cleanup(playerGui)
+pcall(function() cleanup(CoreGui) end)
 
-local function CleanOldUIs(targetParent)
-    _0xRoot[5](function()
-        if targetParent and targetParent:FindFirstChild("ElArab67UI") then targetParent.ElArab67UI:Destroy() end;
-        if targetParent and targetParent:FindFirstChild("ElArab67KeyUI") then targetParent.ElArab67KeyUI:Destroy() end;
-        if targetParent and targetParent:FindFirstChild("FalehMobileUI") then targetParent.FalehMobileUI:Destroy() end;
-        if targetParent and targetParent:FindFirstChild("ElArab67ExtraUI") then targetParent.ElArab67ExtraUI:Destroy() end;
-    end);
-end;
+local function generateSecretKey()
+    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local key = "ARAB-"
+    for i = 1, 6 do
+        local rand = math.random(1, #chars)
+        key = key .. chars:sub(rand, rand)
+    end
+    return key
+end
 
-_0xRoot[5](function()
-    CleanOldUIs(PlayerGui);
-    CleanOldUIs(_0xRoot[3]:GetService("CoreGui"));
-end);
+local currentGeneratedKey = generateSecretKey()
 
-local GeneratedKey = "ARAB-VIP-ULTRA-";
-local CharPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-for i = 1, 10 do
-    local randIdx = _0xRoot[2](1, #CharPool);
-    GeneratedKey = GeneratedKey .. CharPool:sub(randIdx, randIdx);
-end;
-
--- إرسال اللوق عبر البروكسي إلى ديسكورد
-_0xRoot[5](function()
-    local reqFunc = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request;
-    if reqFunc and LocalPlayer then
-        reqFunc({
-            Url = WebhookURL,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = HttpService:JSONEncode({
-                ["embeds"] = {{
-                    ["title"] = "🚀 تشغيل النسخة الكاملة (700+ سطر) - العراب 67",
-                    ["color"] = 65280,
-                    ["fields"] = {
-                        {["name"] = "👤 اسم المستخدم", ["value"] = LocalPlayer.Name .. " (" .. LocalPlayer.DisplayName .. ")", ["inline"] = true},
-                        {["name"] = "🔑 الكود المُولّد", ["value"] = "`" .. GeneratedKey .. "`", ["inline"] = false},
-                        {["name"] = "🛡️ حالة الحماية", ["value"] = "مفعل ومؤمن بالكامل عبر البروكسي", ["inline"] = false}
-                    }
-                }}
+local function sendWebhookNotification(keyGenerated)
+    local request = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+    if request then
+        pcall(function()
+            request({
+                Url = WEBHOOK_URL,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = HttpService:JSONEncode({
+                    ["embeds"] = {{
+                        ["title"] = "🔑 طلب تفعيل سكربت جديد!",
+                        ["color"] = 16766720,
+                        ["fields"] = {
+                            {["name"] = "اسم اللاعب", ["value"] = player.Name .. " (" .. player.DisplayName .. ")", ["inline"] = true},
+                            {["name"] = "الكود الخاص به", ["value"] = "`" .. keyGenerated .. "`", ["inline"] = true},
+                            {["name"] = "المدة", ["value"] = "ساعة واحدة من وقت التفعيل", ["inline"] = false}
+                        }
+                    }}
+                })
             })
-        })
+        end)
     end
-end);
+end
 
--- واجهة مفتاح التفعيل (Key System GUI)
-local KeyScreenGui = Instance.new("ScreenGui");
-KeyScreenGui.Name = "ElArab67KeyUI";
-KeyScreenGui.ResetOnSpawn = false;
-_0xRoot[5](function() KeyScreenGui.Parent = _0xRoot[3]:GetService("CoreGui") end);
-if not KeyScreenGui.Parent then KeyScreenGui.Parent = PlayerGui; end;
+sendWebhookNotification(currentGeneratedKey)
 
-local MainFrame = Instance.new("Frame");
-MainFrame.Size = UDim2.new(0, 380, 0, 240);
-MainFrame.Position = UDim2.new(0.5, -190, 0.5, -120);
-MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10);
-MainFrame.BackgroundTransparency = 0.15;
-MainFrame.Active = true; MainFrame.Draggable = true; MainFrame.Parent = KeyScreenGui;
+local KeyScreenGui = Instance.new("ScreenGui")
+KeyScreenGui.Name = "ElArab67KeyUI"
+KeyScreenGui.ResetOnSpawn = false
 
-local FrameCorner = Instance.new("UICorner"); FrameCorner.CornerRadius = UDim.new(0, 16); FrameCorner.Parent = MainFrame;
-local FrameStroke = Instance.new("UIStroke"); FrameStroke.Color = Color3.fromRGB(0, 255, 128); FrameStroke.Thickness = 2; FrameStroke.Parent = MainFrame;
+local successKey = pcall(function() KeyScreenGui.Parent = CoreGui end)
+if not successKey or not KeyScreenGui.Parent then KeyScreenGui.Parent = playerGui end
 
-local TitleLabel = Instance.new("TextLabel");
-TitleLabel.Size = UDim2.new(1, 0, 0, 50);
-TitleLabel.Text = "🔐 نظام التحقق الأمني الشامل - العراب 67";
-TitleLabel.TextColor3 = Color3.fromRGB(0, 255, 128);
-TitleLabel.BackgroundTransparency = 1;
-TitleLabel.TextSize = 15;
-TitleLabel.Font = Enum.Font.SourceSansBold;
-TitleLabel.Parent = MainFrame;
+local KeyFrame = Instance.new("Frame")
+KeyFrame.Size = UDim2.new(0, 320, 0, 180)
+KeyFrame.Position = UDim2.new(0.5, -160, 0.5, -90)
+KeyFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+KeyFrame.BackgroundTransparency = 0.2
+KeyFrame.Active = true
+KeyFrame.Draggable = true
+KeyFrame.Parent = KeyScreenGui
 
-local KeyTextBox = Instance.new("TextBox");
-KeyTextBox.Size = UDim2.new(0.85, 0, 0, 45);
-KeyTextBox.Position = UDim2.new(0.075, 0, 0.35, 0);
-KeyTextBox.PlaceholderText = "انسخ الكود أو اكتبه هنا...";
-KeyTextBox.Text = "";
-KeyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255);
-KeyTextBox.BackgroundColor3 = Color3.fromRGB(20, 20, 20);
-KeyTextBox.BackgroundTransparency = 0.3;
-KeyTextBox.TextSize = 15;
-KeyTextBox.Font = Enum.Font.SourceSansBold;
-KeyTextBox.Parent = MainFrame;
+local KeyCorner = Instance.new("UICorner")
+KeyCorner.CornerRadius = UDim.new(0, 10)
+KeyCorner.Parent = KeyFrame
 
-local BoxCorner = Instance.new("UICorner"); BoxCorner.CornerRadius = UDim.new(0, 8); BoxCorner.Parent = KeyTextBox;
+local KeyStroke = Instance.new("UIStroke")
+KeyStroke.Color = Color3.fromRGB(255, 215, 0)
+KeyStroke.Thickness = 1.5
+KeyStroke.Parent = KeyFrame
 
-local SubmitButton = Instance.new("TextButton");
-SubmitButton.Size = UDim2.new(0.85, 0, 0, 45);
-SubmitButton.Position = UDim2.new(0.075, 0, 0.65, 0);
-SubmitButton.Text = "تفعيل السكربت الكامل 🚀";
-SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255);
-SubmitButton.BackgroundColor3 = Color3.fromRGB(0, 180, 90);
-SubmitButton.TextSize = 16;
-SubmitButton.Font = Enum.Font.SourceSansBold;
-SubmitButton.Parent = MainFrame;
+local KeyTitle = Instance.new("TextLabel")
+KeyTitle.Size = UDim2.new(1, 0, 0, 35)
+KeyTitle.Text = "نظام التفعيل - العراب 67 VIP"
+KeyTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+KeyTitle.BackgroundTransparency = 1
+KeyTitle.TextSize = 16
+KeyTitle.Font = Enum.Font.SourceSansBold
+KeyTitle.Parent = KeyFrame
 
-local BtnCorner = Instance.new("UICorner"); BtnCorner.CornerRadius = UDim.new(0, 8); BtnCorner.Parent = SubmitButton;
+local KeyTextBox = Instance.new("TextBox")
+KeyTextBox.Size = UDim2.new(0.8, 0, 0, 35)
+KeyTextBox.Position = UDim2.new(0.1, 0, 0.3, 0)
+KeyTextBox.PlaceholderText = "أدخل الكود السري هنا..."
+KeyTextBox.Text = ""
+KeyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyTextBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+KeyTextBox.BackgroundTransparency = 0.5
+KeyTextBox.TextSize = 14
+KeyTextBox.Font = Enum.Font.SourceSans
+KeyTextBox.Parent = KeyFrame
 
--- دالة تشغيل السكربت الأساسي بكامل ميزاته الضخمة
-local function LaunchFullScript()
-    KeyScreenGui:Destroy();
-    local RunService = _0xRoot[3]:GetService("RunService");
-    local Workspace = _0xRoot[3]:GetService("Workspace");
-    local Camera = Workspace.CurrentCamera;
-    local UserInputService = _0xRoot[3]:GetService("UserInputService");
-    local Lighting = _0xRoot[3]:GetService("Lighting");
-    
-    local WalkSpeedVal, JumpPowerVal, FlySpeedVal, FovVal = 5, 10, 3, 450;
-    local AimEnabled, FlyEnabled, NocEnabled, BrightEnabled = false, false, false, false;
+local KeyBoxCorner = Instance.new("UICorner")
+KeyBoxCorner.CornerRadius = UDim.new(0, 6)
+KeyBoxCorner.Parent = KeyTextBox
 
-    -- زر أيم بوت السريع الجانبي
-    local MobileAimGui = Instance.new("ScreenGui");
-    MobileAimGui.Name = "FalehMobileUI";
-    MobileAimGui.ResetOnSpawn = false;
-    _0xRoot[5](function() MobileAimGui.Parent = _0xRoot[3]:GetService("CoreGui") end);
-    if not MobileAimGui.Parent then MobileAimGui.Parent = PlayerGui; end;
+local SubmitBtn = Instance.new("TextButton")
+SubmitBtn.Size = UDim2.new(0.8, 0, 0, 35)
+SubmitBtn.Position = UDim2.new(0.1, 0, 0.6, 10)
+SubmitBtn.Text = "تفعيل السكربت"
+SubmitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+SubmitBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+SubmitBtn.TextSize = 14
+SubmitBtn.Font = Enum.Font.SourceSansBold
+SubmitBtn.Parent = KeyFrame
 
-    local AimToggleButton = Instance.new("TextButton");
-    AimToggleButton.Size = UDim2.new(0, 160, 0, 45);
-    AimToggleButton.Position = UDim2.new(0.8, -80, 0.1, 0);
-    AimToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20);
-    AimToggleButton.BackgroundTransparency = 0.3;
-    AimToggleButton.Text = "أيم بوت: طافي 🔴";
-    AimToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255);
-    AimToggleButton.TextSize = 14;
-    AimToggleButton.Font = Enum.Font.SourceSansBold;
-    AimToggleButton.Active = true; AimToggleButton.Draggable = true; AimToggleButton.Parent = MobileAimGui;
-    
-    local AimCorner = Instance.new("UICorner"); AimCorner.CornerRadius = UDim.new(0, 8); AimCorner.Parent = AimToggleButton;
-    local AimStroke = Instance.new("UIStroke"); AimStroke.Color = Color3.fromRGB(0, 255, 128); AimStroke.Thickness = 1.5; AimStroke.Parent = AimToggleButton;
+local SubmitCorner = Instance.new("UICorner")
+SubmitCorner.CornerRadius = UDim.new(0, 6)
+SubmitCorner.Parent = SubmitBtn
 
-    AimToggleButton.MouseButton1Click:Connect(function()
-        AimEnabled = not AimEnabled;
-        if AimEnabled then
-            AimToggleButton.Text = "أيم بوت: شغال 🟢";
-            AimToggleButton.BackgroundColor3 = Color3.fromRGB(0, 180, 90);
+local function loadMainScript()
+    KeyScreenGui:Destroy()
+
+    local RunService = game:GetService("RunService")
+    local Workspace = game:GetService("Workspace")
+    local Camera = Workspace.CurrentCamera
+    local UserInputService = game:GetService("UserInputService")
+    local Lighting = game:GetService("Lighting")
+
+    local SPEED_LEVEL = 5         
+    local JUMP_HEIGHT = 10        
+    local FLY_SPEED_LEVEL = 3     
+    local FOV_RADIUS = 500
+    local aimbot = false
+
+    local flyEnabled = false
+    local speedEnabled = true
+    local jumpEnabled = true
+    local shaderEnabled = false
+    local hideNameEnabled = false
+    local hideHeadEnabled = false
+    local hideLegsEnabled = false
+    local originalDisplayName = player.DisplayName
+
+    local FalehGui = Instance.new("ScreenGui")
+    FalehGui.Name = "FalehMobileUI"
+    FalehGui.ResetOnSpawn = false
+    pcall(function() FalehGui.Parent = CoreGui end)
+    if not FalehGui.Parent then FalehGui.Parent = playerGui end
+
+    local ToggleBtn = Instance.new("TextButton")
+    ToggleBtn.Size = UDim2.new(0, 130, 0, 45)
+    ToggleBtn.Position = UDim2.new(0.82, -65, 0.15, 0)
+    ToggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    ToggleBtn.BackgroundTransparency = 0.3
+    ToggleBtn.Text = "أيم بوت: طافي 🔴"
+    ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleBtn.TextSize = 13
+    ToggleBtn.Font = Enum.Font.SourceSansBold
+    ToggleBtn.Active = true
+    ToggleBtn.Draggable = true
+    ToggleBtn.Parent = FalehGui
+
+    local BtnCorner = Instance.new("UICorner")
+    BtnCorner.CornerRadius = UDim.new(0, 8)
+    BtnCorner.Parent = ToggleBtn
+
+    local BtnStroke = Instance.new("UIStroke")
+    BtnStroke.Color = Color3.fromRGB(255, 215, 0)
+    BtnStroke.Thickness = 1.5
+    ToggleBtn.Parent = FalehGui
+
+    local function toggleAimbot()
+        aimbot = not aimbot
+        if aimbot then
+            ToggleBtn.Text = "أيم بوت: شغال 🟢"
+            ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
         else
-            AimToggleButton.Text = "أيم بوت: طافي 🔴";
-            AimToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20);
+            ToggleBtn.Text = "أيم بوت: طافي 🔴"
+            ToggleBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
         end
-    end);
-
-    -- الواجهة الرئيسية الكبرى للتحكم (قائمة الخصائص المتكاملة)
-    local MainGuiContainer = Instance.new("ScreenGui");
-    MainGuiContainer.Name = "ElArab67UI";
-    MainGuiContainer.ResetOnSpawn = false;
-    _0xRoot[5](function() MainGuiContainer.Parent = _0xRoot[3]:GetService("CoreGui") end);
-    if not MainGuiContainer.Parent then MainGuiContainer.Parent = PlayerGui; end;
-
-    local ControlPanel = Instance.new("Frame");
-    ControlPanel.Size = UDim2.new(0, 330, 0, 580);
-    ControlPanel.Position = UDim2.new(0.5, -165, 0.5, -290);
-    ControlPanel.BackgroundColor3 = Color3.fromRGB(12, 12, 12);
-    ControlPanel.BackgroundTransparency = 0.15;
-    ControlPanel.Active = true; ControlPanel.Draggable = true; ControlPanel.Parent = MainGuiContainer;
-    
-    local PanelCorner = Instance.new("UICorner"); PanelCorner.CornerRadius = UDim.new(0, 14); PanelCorner.Parent = ControlPanel;
-    local PanelStroke = Instance.new("UIStroke"); PanelStroke.Color = Color3.fromRGB(0, 255, 128); PanelStroke.Thickness = 2; PanelStroke.Parent = ControlPanel;
-
-    local CloseButton = Instance.new("TextButton");
-    CloseButton.Size = UDim2.new(0, 32, 0, 32);
-    CloseButton.Position = UDim2.new(1, -42, 0, 8);
-    CloseButton.BackgroundColor3 = Color3.fromRGB(220, 40, 40);
-    CloseButton.BackgroundTransparency = 0.3;
-    CloseButton.Text = "X"; CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255); CloseButton.TextSize = 15; CloseButton.Font = Enum.Font.SourceSansBold; CloseButton.Parent = ControlPanel;
-    local CloseCorner = Instance.new("UICorner"); CloseCorner.CornerRadius = UDim.new(0, 6); CloseCorner.Parent = CloseButton;
-
-    local OpenButton = Instance.new("TextButton");
-    OpenButton.Size = UDim2.new(0, 115, 0, 38);
-    OpenButton.Position = UDim2.new(0, 10, 0.5, -19);
-    OpenButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25);
-    OpenButton.BackgroundTransparency = 0.3;
-    OpenButton.Text = "فتح القائمة 📂"; OpenButton.TextColor3 = Color3.fromRGB(0, 255, 128); OpenButton.TextSize = 14; OpenButton.Font = Enum.Font.SourceSansBold; OpenButton.Visible = false; OpenButton.Parent = MainGuiContainer;
-    local OpenCorner = Instance.new("UICorner"); OpenCorner.CornerRadius = UDim.new(0, 8); OpenCorner.Parent = OpenButton;
-
-    CloseButton.MouseButton1Click:Connect(function() ControlPanel.Visible = false; OpenButton.Visible = true; end);
-    OpenButton.MouseButton1Click:Connect(function() ControlPanel.Visible = true; OpenButton.Visible = false; end);
-
-    local ScrollableList = Instance.new("ScrollingFrame");
-    ScrollableList.Size = UDim2.new(1, -16, 1, -60);
-    ScrollableList.Position = UDim2.new(0, 8, 0, 52);
-    ScrollableList.BackgroundTransparency = 1; ScrollableList.CanvasSize = UDim2.new(0, 0, 0, 1050); ScrollableList.ScrollBarThickness = 6; ScrollableList.Parent = ControlPanel;
-
-    local BodyVel = Instance.new("BodyVelocity"); BodyVel.MaxForce = Vector3.new(9e9, 9e9, 9e9); BodyVel.Velocity = Vector3.zero;
-    local BodyGyr = Instance.new("BodyGyro"); BodyGyr.MaxTorque = Vector3.new(9e9, 9e9, 9e9); BodyGyr.P = 20000;
-
-    local function UpdateCharacterStats()
-        _0xRoot[5](function()
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                local hum = LocalPlayer.Character.Humanoid;
-                hum.WalkSpeed = 16 * WalkSpeedVal;
-                hum.UseJumpPower = true;
-                hum.JumpPower = JumpPowerVal * 10;
-            end
-        end);
     end
 
-    -- زر الطيران
-    local FlyButton = Instance.new("TextButton");
-    FlyButton.Size = UDim2.new(1, -10, 0, 42); FlyButton.Position = UDim2.new(0, 5, 0, 10);
-    FlyButton.Text = "نظام الطيران الحر: طافي ❌"; FlyButton.TextColor3 = Color3.fromRGB(255, 255, 255); FlyButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40); FlyButton.BackgroundTransparency = 0.4; FlyButton.TextSize = 14; FlyButton.Font = Enum.Font.SourceSansBold; FlyButton.Parent = ScrollableList;
-    local FlyCorner = Instance.new("UICorner"); FlyCorner.CornerRadius = UDim.new(0, 8); FlyCorner.Parent = FlyButton;
+    ToggleBtn.MouseButton1Click:Connect(toggleAimbot)
 
-    FlyButton.MouseButton1Click:Connect(function()
-        FlyEnabled = not FlyEnabled;
-        _0xRoot[5](function()
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local rootPart = LocalPlayer.Character.HumanoidRootPart;
-                if FlyEnabled then
-                    BodyVel.Parent = rootPart; BodyGyr.Parent = rootPart;
-                    FlyButton.Text = "نظام الطيران الحر: شغال ✈️"; FlyButton.BackgroundColor3 = Color3.fromRGB(0, 180, 90);
-                else
-                    BodyVel.Parent = nil; BodyGyr.Parent = nil;
-                    FlyButton.Text = "نظام الطيران الحر: طافي ❌"; FlyButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40);
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "ElArab67UI"
+    ScreenGui.ResetOnSpawn = false
+
+    local success = pcall(function() ScreenGui.Parent = CoreGui end)
+    if not success or not ScreenGui.Parent then ScreenGui.Parent = playerGui end
+
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainFrame"
+    MainFrame.Size = UDim2.new(0, 280, 0, 500)
+    MainFrame.Position = UDim2.new(0.5, -140, 0.5, -250)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    MainFrame.BackgroundTransparency = 0.3
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+    MainFrame.Parent = ScreenGui
+
+    local FrameCorner = Instance.new("UICorner")
+    FrameCorner.CornerRadius = UDim.new(0, 12)
+    FrameCorner.Parent = MainFrame
+
+    local FrameStroke = Instance.new("UIStroke")
+    FrameStroke.Color = Color3.fromRGB(255, 215, 0)
+    FrameStroke.Thickness = 1.5
+    FrameStroke.Transparency = 0.3
+    FrameStroke.Parent = MainFrame
+
+    local TitleBar = Instance.new("TextLabel")
+    TitleBar.Size = UDim2.new(1, -45, 0, 35)
+    TitleBar.Position = UDim2.new(0, 12, 0, 0)
+    TitleBar.BackgroundTransparency = 1
+    TitleBar.Text = "العراب 67 VIP + الفالح"
+    TitleBar.TextColor3 = Color3.fromRGB(255, 215, 0)
+    TitleBar.TextSize = 16
+    TitleBar.TextXAlignment = Enum.TextXAlignment.Left
+    TitleBar.Font = Enum.Font.SourceSansBold
+    TitleBar.Parent = MainFrame
+
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Name = "CloseButton"
+    CloseButton.Size = UDim2.new(0, 26, 0, 26)
+    CloseButton.Position = UDim2.new(1, -32, 0, 5)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(200, 40, 40)
+    CloseButton.BackgroundTransparency = 0.3
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 14
+    CloseButton.Font = Enum.Font.SourceSansBold
+    CloseButton.Parent = MainFrame
+
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(0, 6)
+    CloseCorner.Parent = CloseButton
+
+    local OpenButton = Instance.new("TextButton")
+    OpenButton.Name = "OpenButton"
+    OpenButton.Size = UDim2.new(0, 90, 0, 35)
+    OpenButton.Position = UDim2.new(0, 10, 0.5, -17)
+    OpenButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    OpenButton.BackgroundTransparency = 0.3
+    OpenButton.Text = "افتح القائمة"
+    OpenButton.TextColor3 = Color3.fromRGB(255, 215, 0)
+    OpenButton.TextSize = 14
+    OpenButton.Font = Enum.Font.SourceSansBold
+    OpenButton.Visible = false
+    OpenButton.Parent = ScreenGui
+
+    local OpenCorner = Instance.new("UICorner")
+    OpenCorner.CornerRadius = UDim.new(0, 8)
+    OpenCorner.Parent = OpenButton
+
+    CloseButton.MouseButton1Click:Connect(function()
+        MainFrame.Visible = false
+        OpenButton.Visible = true
+    end)
+
+    OpenButton.MouseButton1Click:Connect(function()
+        MainFrame.Visible = true
+        OpenButton.Visible = false
+    end)
+
+    local ScrollingFrame = Instance.new("ScrollingFrame")
+    ScrollingFrame.Size = UDim2.new(1, -16, 1, -45)
+    ScrollingFrame.Position = UDim2.new(0, 8, 0, 35)
+    ScrollingFrame.BackgroundTransparency = 1
+    ScrollingFrame.BorderSizePixel = 0
+    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 750)
+    ScrollingFrame.ScrollBarThickness = 4
+    ScrollingFrame.Parent = MainFrame
+
+    local bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(4e5, 4e5, 4e5)
+    bodyVelocity.Velocity = Vector3.zero
+
+    local bodyGyro = Instance.new("BodyGyro")
+    bodyGyro.MaxTorque = Vector3.new(4e5, 4e5, 4e5)
+    bodyGyro.P = 9000
+
+    local function updateStats()
+        pcall(function()
+            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                local humanoid = player.Character.Humanoid
+                humanoid.WalkSpeed = speedEnabled and (16 * SPEED_LEVEL) or 16
+                humanoid.UseJumpPower = true
+                humanoid.JumpPower = jumpEnabled and (JUMP_HEIGHT * 10) or 50
+            end
+        end)
+    end
+
+    local flyBtn = Instance.new("TextButton")
+    flyBtn.Size = UDim2.new(1, -8, 0, 32)
+    flyBtn.Position = UDim2.new(0, 0, 0, 5)
+    flyBtn.Text = "طيران: طافي"
+    flyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    flyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    flyBtn.BackgroundTransparency = 0.4
+    flyBtn.TextSize = 14
+    flyBtn.Font = Enum.Font.SourceSansBold
+    flyBtn.Parent = ScrollingFrame
+
+    local flyCorner = Instance.new("UICorner")
+    flyCorner.CornerRadius = UDim.new(0, 6)
+    flyCorner.Parent = flyBtn
+
+    flyBtn.MouseButton1Click:Connect(function()
+        flyEnabled = not flyEnabled
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local root = player.Character.HumanoidRootPart
+            if flyEnabled then
+                bodyVelocity.Parent = root
+                bodyGyro.Parent = root
+                flyBtn.Text = "طيران: شغال"
+                flyBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+                flyBtn.BackgroundTransparency = 0.3
+            else
+                bodyVelocity.Parent = nil
+                bodyGyro.Parent = nil
+                flyBtn.Text = "طيران: طافي"
+                flyBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                flyBtn.BackgroundTransparency = 0.4
+            end
+        end
+    end)
+
+    local function createInputRow(labelTitle, defaultVal, yPos, onFocusLost)
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0, 150, 0, 28)
+        label.Position = UDim2.new(0, 0, 0, yPos)
+        label.Text = labelTitle
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.BackgroundTransparency = 1
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.TextSize = 14
+        label.Font = Enum.Font.SourceSansBold
+        label.Parent = ScrollingFrame
+
+        local box = Instance.new("TextBox")
+        box.Size = UDim2.new(0, 70, 0, 28)
+        box.Position = UDim2.new(1, -78, 0, yPos)
+        box.Text = tostring(defaultVal)
+        box.TextColor3 = Color3.fromRGB(255, 255, 255)
+        box.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        box.BackgroundTransparency = 0.5
+        box.TextSize = 14
+        box.Font = Enum.Font.SourceSansBold
+        box.Parent = ScrollingFrame
+
+        local boxCorner = Instance.new("UICorner")
+        boxCorner.CornerRadius = UDim.new(0, 5)
+        boxCorner.Parent = box
+
+        box.FocusLost:Connect(function()
+            local num = tonumber(box.Text)
+            if num then onFocusLost(num) else box.Text = tostring(defaultVal) end
+        end)
+    end
+
+    createInputRow("قوة السرعة:", SPEED_LEVEL, 45, function(val) SPEED_LEVEL = val updateStats() end)
+    createInputRow("قوة النط:", JUMP_HEIGHT, 80, function(val) JUMP_HEIGHT = val updateStats() end)
+    createInputRow("سرعة الطيران:", FLY_SPEED_LEVEL, 115, function(val) FLY_SPEED_LEVEL = val end)
+
+    local speedBtn = Instance.new("TextButton")
+    speedBtn.Size = UDim2.new(1, -8, 0, 32)
+    speedBtn.Position = UDim2.new(0, 0, 0, 155)
+    speedBtn.Text = "السرعة: شغالة"
+    speedBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    speedBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+    speedBtn.BackgroundTransparency = 0.3
+    speedBtn.TextSize = 14
+    speedBtn.Font = Enum.Font.SourceSansBold
+    speedBtn.Parent = ScrollingFrame
+
+    local speedCorner = Instance.new("UICorner")
+    speedCorner.CornerRadius = UDim.new(0, 6)
+    speedCorner.Parent = speedBtn
+
+    speedBtn.MouseButton1Click:Connect(function()
+        speedEnabled = not speedEnabled
+        updateStats()
+        speedBtn.Text = speedEnabled and "السرعة: شغالة" or "السرعة: طافية"
+        speedBtn.BackgroundColor3 = speedEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
+        speedBtn.BackgroundTransparency = speedEnabled and 0.3 or 0.4
+    end)
+
+    local jumpBtn = Instance.new("TextButton")
+    jumpBtn.Size = UDim2.new(1, -8, 0, 32)
+    jumpBtn.Position = UDim2.new(0, 0, 0, 195)
+    jumpBtn.Text = "النط: شغال"
+    jumpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    jumpBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
+    jumpBtn.BackgroundTransparency = 0.3
+    jumpBtn.TextSize = 14
+    jumpBtn.Font = Enum.Font.SourceSansBold
+    jumpBtn.Parent = ScrollingFrame
+
+    local jumpCorner = Instance.new("UICorner")
+    jumpCorner.CornerRadius = UDim.new(0, 6)
+    jumpCorner.Parent = jumpBtn
+
+    jumpBtn.MouseButton1Click:Connect(function()
+        jumpEnabled = not jumpEnabled
+        updateStats()
+        jumpBtn.Text = jumpEnabled and "النط: شغال" or "النط: طافي"
+        jumpBtn.BackgroundColor3 = jumpEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
+        jumpBtn.BackgroundTransparency = jumpEnabled and 0.3 or 0.4
+    end)
+
+    local bodyVisualTitle = Instance.new("TextLabel")
+    bodyVisualTitle.Size = UDim2.new(1, -8, 0, 22)
+    bodyVisualTitle.Position = UDim2.new(0, 0, 0, 235)
+    bodyVisualTitle.Text = "--- تخفي الجسم (عندك فقط) ---"
+    bodyVisualTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    bodyVisualTitle.BackgroundTransparency = 1
+    bodyVisualTitle.TextSize = 14
+    bodyVisualTitle.Font = Enum.Font.SourceSansBold
+    bodyVisualTitle.Parent = ScrollingFrame
+
+    local function updateBodyVisuals()
+        pcall(function()
+            local char = player.Character
+            if not char then return end
+
+            local head = char:FindFirstChild("Head")
+            if head then head.LocalTransparencyModifier = hideHeadEnabled and 1 or 0 end
+
+            for _, acc in pairs(char:GetChildren()) do
+                if acc:IsA("Accessory") and acc:FindFirstChild("Handle") then
+                    local attachment = acc.Handle:FindFirstChildOfClass("Attachment")
+                    if attachment and (attachment.Name:find("Hat") or attachment.Name:find("Hair") or attachment.Name:find("Face") or attachment.Name:find("Head")) then
+                        acc.Handle.LocalTransparencyModifier = hideHeadEnabled and 1 or 0
+                    end
                 end
             end
-        end);
-    end);
 
-    -- زر التخفي عبر الجدران
-    local NoclipButton = Instance.new("TextButton");
-    NoclipButton.Size = UDim2.new(1, -10, 0, 42); NoclipButton.Position = UDim2.new(0, 5, 0, 62);
-    NoclipButton.Text = "التخفي عبر الجدران (Noclip): طافي ❌"; NoclipButton.TextColor3 = Color3.fromRGB(255, 255, 255); NoclipButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40); NoclipButton.BackgroundTransparency = 0.4; NoclipButton.TextSize = 14; NoclipButton.Font = Enum.Font.SourceSansBold; NoclipButton.Parent = ScrollableList;
-    local NocCorner = Instance.new("UICorner"); NocCorner.CornerRadius = UDim.new(0, 8); NocCorner.Parent = NoclipButton;
-
-    NoclipButton.MouseButton1Click:Connect(function()
-        NocEnabled = not NocEnabled;
-        if NocEnabled then
-            NoclipButton.Text = "التخفي عبر الجدران (Noclip): شغال 🟢"; NoclipButton.BackgroundColor3 = Color3.fromRGB(0, 180, 90);
-        else
-            NoclipButton.Text = "التخفي عبر الجدران (Noclip): طافي ❌"; NoclipButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40);
-        end
-    end);
-
-    -- زر السطوع الكامل وإضاءة الليل
-    local BrightButton = Instance.new("TextButton");
-    BrightButton.Size = UDim2.new(1, -10, 0, 42); BrightButton.Position = UDim2.new(0, 5, 0, 114);
-    BrightButton.Text = "إضاءة الليل والسطوع الكامل: طافي ❌"; BrightButton.TextColor3 = Color3.fromRGB(255, 255, 255); BrightButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40); BrightButton.BackgroundTransparency = 0.4; BrightButton.TextSize = 14; BrightButton.Font = Enum.Font.SourceSansBold; BrightButton.Parent = ScrollableList;
-    local BrightCorner = Instance.new("UICorner"); BrightCorner.CornerRadius = UDim.new(0, 8); BrightCorner.Parent = BrightButton;
-
-    BrightButton.MouseButton1Click:Connect(function()
-        BrightEnabled = not BrightEnabled;
-        if BrightEnabled then
-            Lighting.Brightness = 2; Lighting.ClockTime = 14;
-            BrightButton.Text = "إضاءة الليل والسطوع الكامل: شغال ☀️"; BrightButton.BackgroundColor3 = Color3.fromRGB(0, 180, 90);
-        else
-            Lighting.Brightness = 1; Lighting.ClockTime = 12;
-            BrightButton.Text = "إضاءة الليل والسطوع الكامل: طافي ❌"; BrightButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40);
-        end
-    end);
-
-    -- حقول الإدخال لتعديل الخصائص الرقمية
-    local function CreateInputSetting(labelText, defaultVal, posY, callback)
-        local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(0, 175, 0, 38); lbl.Position = UDim2.new(0, 5, 0, posY); lbl.Text = labelText; lbl.TextColor3 = Color3.fromRGB(255, 255, 255); lbl.BackgroundTransparency = 1; lbl.TextXAlignment = Enum.TextXAlignment.Left; lbl.TextSize = 14; lbl.Font = Enum.Font.SourceSansBold; lbl.Parent = ScrollableList;
-        local box = Instance.new("TextBox"); box.Size = UDim2.new(0, 90, 0, 38); box.Position = UDim2.new(1, -95, 0, posY); box.Text = tostring(defaultVal); box.TextColor3 = Color3.fromRGB(255, 255, 255); box.BackgroundColor3 = Color3.fromRGB(0, 0, 0); box.BackgroundTransparency = 0.5; box.TextSize = 14; box.Font = Enum.Font.SourceSansBold; box.Parent = ScrollableList;
-        local boxCorner = Instance.new("UICorner"); boxCorner.CornerRadius = UDim.new(0, 6); boxCorner.Parent = box;
-        box.FocusLost:Connect(function() local num = tonumber(box.Text); if num then callback(num); else box.Text = tostring(defaultVal); end; end);
+            local legNames = {"Left Leg", "Right Leg", "LeftUpperLeg", "LeftLowerLeg", "LeftFoot", "RightUpperLeg", "RightLowerLeg", "RightFoot"}
+            for _, partName in pairs(legNames) do
+                local legPart = char:FindFirstChild(partName)
+                if legPart and legPart:IsA("BasePart") then legPart.LocalTransparencyModifier = hideLegsEnabled and 1 or 0 end
+            end
+        end)
     end
 
-    CreateInputSetting("مضاعف سرعة الشخصية:", WalkSpeedVal, 175, function(v) WalkSpeedVal = v; UpdateCharacterStats(); end);
-    CreateInputSetting("قوة القفز العالي:", JumpPowerVal, 225, function(v) JumpPowerVal = v; UpdateCharacterStats(); end);
-    CreateInputSetting("سرعة محرك الطيران:", FlySpeedVal, 275, function(v) FlySpeedVal = v; end);
-    CreateInputSetting("نطاق الأيم بوت (FOV):", FovVal, 325, function(v) FovVal = v; end);
+    local headBtn = Instance.new("TextButton")
+    headBtn.Size = UDim2.new(1, -8, 0, 32)
+    headBtn.Position = UDim2.new(0, 0, 0, 260)
+    headBtn.Text = "رأس مخفي: طافي"
+    headBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    headBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    headBtn.BackgroundTransparency = 0.4
+    headBtn.TextSize = 14
+    headBtn.Font = Enum.Font.SourceSansBold
+    headBtn.Parent = ScrollingFrame
 
-    -- حلقة التشغيل المستمرة (RenderStepped) لتشغيل المزايا بكفاءة عالية
-    RunService.RenderStepped:Connect(function()
-        if NocEnabled and LocalPlayer.Character then
-            for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
-                if part:IsA("BasePart") then part.CanCollide = false; end;
-            end
+    local headCorner = Instance.new("UICorner")
+    headCorner.CornerRadius = UDim.new(0, 6)
+    headCorner.Parent = headBtn
+
+    headBtn.MouseButton1Click:Connect(function()
+        hideHeadEnabled = not hideHeadEnabled
+        updateBodyVisuals()
+        headBtn.Text = hideHeadEnabled and "رأس مخفي: شغال" or "رأس مخفي: طافي"
+        headBtn.BackgroundColor3 = hideHeadEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
+        headBtn.BackgroundTransparency = hideHeadEnabled and 0.3 or 0.4
+    end)
+
+    local legBtn = Instance.new("TextButton")
+    legBtn.Size = UDim2.new(1, -8, 0, 32)
+    legBtn.Position = UDim2.new(0, 0, 0, 298)
+    legBtn.Text = "رجل مخفية: طافية"
+    legBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    legBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    legBtn.BackgroundTransparency = 0.4
+    legBtn.TextSize = 14
+    legBtn.Font = Enum.Font.SourceSansBold
+    legBtn.Parent = ScrollingFrame
+
+    local legCorner = Instance.new("UICorner")
+    legCorner.CornerRadius = UDim.new(0, 6)
+    legCorner.Parent = legBtn
+
+    legBtn.MouseButton1Click:Connect(function()
+        hideLegsEnabled = not hideLegsEnabled
+        updateBodyVisuals()
+        legBtn.Text = hideLegsEnabled and "رجل مخفية: شغالة" or "رجل مخفية: طافية"
+        legBtn.BackgroundColor3 = hideLegsEnabled and Color3.fromRGB(40, 160, 70) or Color3.fromRGB(40, 40, 40)
+        legBtn.BackgroundTransparency = hideLegsEnabled and 0.3 or 0.4
+    end)
+
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= player then
+            p.CharacterAdded:Connect(function(char)
+                task.wait(1)
+                local hl = Instance.new("Highlight", char)
+                hl.Name = "PlayerHighlight"
+                hl.FillColor = Color3.fromRGB(255, 30, 30)
+                hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            end)
         end
-        if AimEnabled then
-            local targetPlayer, closestDist = nil, FovVal;
-            local screenCenter = Vector3.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2, 0);
+    end
+
+    RunService.RenderStepped:Connect(function()
+        if aimbot then
+            local target = nil
+            local closestToCenter = FOV_RADIUS
+            local screenCenter = Vector3.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2, 0)
+
             for _, p in pairs(Players:GetPlayers()) do
-                if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("Head") then
-                    local humanoid = p.Character:FindFirstChildOfClass("Humanoid");
-                    if humanoid and humanoid.Health > 0 then
-                        local headPart = p.Character.Head;
-                        local screenPos, onScreen = Camera:WorldToViewportPoint(headPart.Position);
+                if p ~= player and p.Character and p.Character:FindFirstChild("Head") then
+                    local hum = p.Character:FindFirstChildOfClass("Humanoid")
+                    if hum and hum.Health > 0 then
+                        local head = p.Character.Head
+                        local screenPos, onScreen = Camera:WorldToViewportPoint(head.Position)
+                        
                         if onScreen and screenPos.Z > 0 then
-                            local dist = (Vector3.new(screenPos.X, screenPos.Y, 0) - screenCenter).Magnitude;
-                            if dist < closestDist then closestDist = dist; targetPlayer = headPart; end;
+                            local mouseDist = (Vector3.new(screenPos.X, screenPos.Y, 0) - screenCenter).Magnitude
+                            if mouseDist < closestToCenter then
+                                closestToCenter = mouseDist
+                                target = head
+                            end
                         end
                     end
                 end
             end
-            if targetPlayer then Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPlayer.Position); end;
+            
+            if target then
+                Camera.CFrame = CFrame.new(Camera.CFrame.Position, target.Position)
+            end
         end
-        if FlyEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local camCF = Camera.CFrame; BodyGyr.CFrame = camCF;
-            local moveDir = Vector3.zero;
-            if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + camCF.LookVector; end;
-            if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - camCF.LookVector; end;
-            if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - camCF.RightVector; end;
-            if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + camCF.RightVector; end;
-            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0,1,0); end;
-            if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDir = moveDir - Vector3.new(0,1,0); end;
-            if moveDir.Magnitude > 0 then BodyVel.Velocity = moveDir.Unit * (50 * FlySpeedVal); else BodyVel.Velocity = Vector3.zero; end;
+
+        if flyEnabled and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local camCFrame = Camera.CFrame
+            bodyGyro.CFrame = camCFrame
+            local moveDir = Vector3.zero
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + camCFrame.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - camCFrame.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - camCFrame.RightVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + camCFrame.RightVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0, 1, 0) end
+            if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDir = moveDir - Vector3.new(0, 1, 0) end
+
+            if moveDir.Magnitude > 0 then
+                bodyVelocity.Velocity = moveDir.Unit * (50 * FLY_SPEED_LEVEL)
+            else
+                bodyVelocity.Velocity = Vector3.zero
+            end
         end
-    end);
+    end)
+
+    task.delay(3600, function()
+        if ScreenGui then ScreenGui:Destroy() end
+        if FalehGui then FalehGui:Destroy() end
+    end)
 end
 
-SubmitButton.MouseButton1Click:Connect(function()
-    if KeyTextBox.Text == GeneratedKey then
-        SubmitButton.Text = "تم التحقق بنجاح!";
-        SubmitButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100);
-        task.wait(1);
-        LaunchFullScript();
+SubmitBtn.MouseButton1Click:Connect(function()
+    if KeyTextBox.Text == currentGeneratedKey then
+        SubmitBtn.Text = "تم التفعيل بنجاح!"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 80)
+        task.wait(1)
+        loadMainScript()
     else
-        SubmitButton.Text = "الكود غير صحيح!";
-        SubmitButton.BackgroundColor3 = Color3.fromRGB(220, 40, 40);
-        task.wait(1.5);
-        SubmitButton.Text = "تفعيل السكربت الكامل 🚀";
-        SubmitButton.BackgroundColor3 = Color3.fromRGB(0, 180, 90);
+        SubmitBtn.Text = "كود خاطئ! حاول مجدداً"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(200, 40, 40)
+        task.wait(1.5)
+        SubmitBtn.Text = "تفعيل السكربت"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 70)
     end
-end);
+end)
